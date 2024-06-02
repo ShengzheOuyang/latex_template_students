@@ -1,13 +1,46 @@
 \chapter{Introduction}
-A wire harness consists of electrical cables, that are used for connecting all electrical and electronic (E/E) components in the automotive vehicle, like 
-control units, sensors, and actuators \cite{NGUYEN2021379} \cite{TROMMNAU2019387}.  
 \section{Movivation}
-
+    A wire harness consists of electrical cables, that are used for connecting all electrical and electronic (E/E) components in the automotive vehicle, like 
+    control units, sensors, and actuators\cite{TROMMNAU2019387}\cite{NGUYEN2021379}. Due to the increasing of electrification of automobile components, 
+    there is also a growing importance of wire harness, such that the optimization of wire harness assembly is especially important for manufacturers,
+    customer and research\cite{HEISLER2021260}. Due to the high degree of flexibility and occlusions inherent in branched deformable linear objects (BDLOs) 
+    including wire harnesses, most harness assembly work is still performed by humans\cite{10284109}.The automatic manipulation of robotics can enhance efficiency 
+    significantly and ease labor shortages, especially in repetitive and time-consuming processes\cite{van2012automatic}.
+    But thanks to the specialized characteristics of the wire harness previously described, traditional manipulation strategies and methods used for rigid objects 
+    cannot be applied to wire harnesses \cite{9952859}.
+    Achieving their automatic manipulation such as fixing the wire harness on a car body or a device box\cite{JIANG201552} also poses a great challenge.  
+    To perform the subsequent automation of the harness assembly, some key points on branches needs to be detected for the purpose of robotic gripping and
+    the topology of the harness needs to be reconstructed using vision sensors, e.g. cameras, as well as computer vision algorithms\cite{9195380}. 
+    This process could be simpler and more straightforward by utilizing an artificial intelligence approach, i.e., keypoint detection\cite{8892980}. 
+    Therefore, training a deep learning model to predict the BDLOs' keypoints and reconstructing the topology become necessary.
+\section{Goals of the thesis}
+    The theis initially aims to adress three key aspects:
 \begin{itemize}
-\item What does ``working according to scientific methods'' actually mean?
-\item What belongs to the proper presentation of results?
-\item Which standards and guidelines apply at the \ac{ISW}?
-\item What is to be considered in general when writing student theses at the \ac{ISW}?
+    \item [(1)] \textbf{Develop a deep learning based AI model for extracting spline modeled segments from an image of a wire harness.}\\ 
+    The primary goal is to develop a deep learning based AI model to extract the keypoints on segments of wire harness precisely.
+    Interpolate the extracted key points as spline to reconstruct the segments. 
+    \item [(2)] \textbf{Generate datasets and expand artificially through innovative approaches.}\\ 
+    For a robust and effect training result of the deep learning model, the dataset should be big enough. At the beginning, a small dataset will be 
+    generated for fast verification of the idea, which is explained above. Once the idea is verified, the dataset should be expanded artificially.
+    \item [(3)] \textbf{Evaluate the generated AI model and compare with other existed methods.} \\ 
+    Eventually, a series of experiments need to be done to prove the feasibility and end effects of the method. Comparative experiments with other existed methods  
+    are also needed to prove the advantages of the method, as well as what improvements are possible in the future.
 \end{itemize}
-
-Read the guidelines for the preparation of student theses at \ac{ISW}! The chapters used in this template are for inspiration only. Each thesis is different and the chapter headings and their order should be adapted accordingly.
+\section{Thesis Outline}
+%之后这里的介绍要更加的精确，精确到每一章说了什么。
+This section is intended to present the structure of the thesis. The thesis consists of three main parts:
+\begin{itemize}
+    \item [(1)] \textbf{Introduction and the state-of-the-art technologies}\\ 
+    In this part, the motivation, the goal of the thesis will first be clarified. 
+    Some of the fundamentals of deep learning will just be presented so that more specific problems like keypoints detection can be introduced.
+    After that some state-of-the-art technologies especially for vision tasks will be introduced which are used as a theoretical basis and support for the thesis 
+    as well as the future research.
+    \item [(2)] \textbf{Theoretical concepts and explanation of the model}\\ 
+    The concepts of wire harnesses' keypoints detection will be explained in this part. Following conception of the keypoints detection, the artificial method 
+    for expanding the dataset of wire harnesses' images will be presented respectively.
+    After the introduction of the conceptual part, the details of the constructed model will be explained.
+    \item [(3)] \textbf{Evaluate the generated AI model and compare with other existed methods.} \\ 
+    In this section, many experiments will be carried out. The configurations of the experiments, and the results will be shown to intuitively present the 
+    effectiveness of the model. Some problems of the model will also be optimized so that the detection of keypoints will become more accurate. 
+    Finally, the model will be compared with other models that are already well known, to summarize the strengths, and the areas that need to be improved.
+  \end{itemize}
