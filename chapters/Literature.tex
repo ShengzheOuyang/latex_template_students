@@ -9,7 +9,7 @@
     tradition computer vision technologies, the approach provide more satisfactory results\cite{voulodimos2018deep}. 
     In this section, some of the most important deep learning network structures for vision tasks will be introduced. Object and keypoints
     detection will be the highlights due to their close connection with the tasks of the thesis.\\
-\textbf{Object detection}\\
+\subsection{Object detection and segmentation}
     The goals of object detection are: what(classification) and where(locolization) is the object is. \autoref{fig:object detection} is an example of object
     detection. In this image, the branches of wire harness is bounded by a green box as groundtruth. They are classified as branches and the locations could 
     also be detected. It serves as the basic of some deep learning based computer vision task such as instance segmentation and object tracking\cite{10028728}. 
@@ -37,4 +37,48 @@
     University team presented the tenth generation of the YOLO model in 2024\cite{wang2024yolov10}. Today, the YOLO model integrates state-of-the-art deep learning 
     techniques, such as an enhanced version of CSPNet\cite{Wang2019CSPNetAN} as the backbone network, PAN (Path Aggregation Network) for effective multi-scale feature
     fusion\cite{Liu_2018_CVPR}. This enables fast and accurate real-time object detection.
-    Kaiming HE from Facebook AI Research extended Faster R-CNN\cite{NIPS2015_14bfa6bb} and prensented 
+    Kaiming He from Facebook AI Research extended Faster R-CNN\cite{NIPS2015_14bfa6bb} with a new branch for predicting the mask of objects\cite{He_2017_ICCV}. Therefore, it is widely 
+    used in the field of instance segmentation. This method has also two stages. The predictions of mask and classification are in parallel. This is different from 
+    the traditional method, as the previous method employed the predicted mask for classification. 
+    \cite{10260646} is an implementation of mask RCNN for instance segmentation of the wire harness. It predicts the topology features such as overlapping points and branch
+    points. These extracted features are then used for topology matching with their sensor representations.\\
+\subsection{keypoints detection}
+    While the object detection are powerful to classify and localize the instances, keypoints detection offers more detailed information about the structures. It is especially
+    useful in industry, e.g., grabbing the wire harness, only some keypoints of interests are needed for determine the grabbing point. Compare with the instance segmentation, 
+    keypoints detection asks for less information of annotation. This is quite helpful because there are almost no open source harness datasets available.\\
+    There are two main approaches for keypoints detection: Keypoint regression strategies and Heatmap regression strategies. 
+    \begin{itemize}
+        \item [(1)] \textbf{Keypoint regression strategies: } This is the direct method for keypoints detection. The position of key points, such as joints, is directly 
+        regressed by coordinates\cite{Toshev_2014_CVPR}. In \cite{9710108}, Li and Bian point out the shortcomings of this approach: it suffers from inferior performance. 
+        In challenging cases like occlusions, motion blur, and truncations, the ground-truth labels are inherently ambiguous. They proposed an optimized approach named  
+        Residual Log-likelihood Estimation(RLE), which leverages normalizing flows to estimate the underlying distribution and boosts human pose regression. The novel 
+        proposed method is more easily trainable than the traditional method.
+
+        \item [(2)] \textbf{Heatmap regression strategies: } This is indirect method for keypoints detection. The likelihood heatmap of each joint will be generated and positions 
+        are regressed by the maximum likelihood\cite{10.1007/978-3-319-46484-8_29}. Two drawbacks of this method are list in\cite{Sun_2018_ECCV}: 1) The likelihood-maximum equation, 
+        see \autoref{eq:maximum likelihood}, is non-differentiable. 2) the heat map representation leads to quantization error.
+        \begin{align}
+            J_{k}=arg\max_{p}H_{k} (p)
+             \label{eq:maximum likelihood}
+        \end{align}
+        The first problem about the non-differentiable equation could lead to non-end-to-end training. The author presented an optimized method called integral pose regression, which
+        allows end-to-end training, has continuous solutions and no quantization problem. They normalized the heatmaps by softmax to get $\widetilde{H}_{k}$ at the beginning and weighted 
+        them by their probabilities p \autoref{eq:soft maximum likelihood}, where $\Omega$ is the domain.\\
+        \begin{align}
+            J_{k}=\int_{p\in \Omega } p\cdot \widetilde{H}_{k}(p) 
+             \label{eq:soft maximum likelihood}
+        \end{align}
+    \end{itemize}
+\subsection{Backbones and necks for vision tasks}
+    The state-of-the-art deep learning models for vision tasks usually consist of three modules: backbone, neck and head\cite{Bouraya2021}. It starts from the input image and hierarchical 
+    features are then extracted by the backbone. The Neck will aggregate multi-scales features and prepare for the task-specific prediction, which is then performed in the head, e.g., 
+    classification and segmentation. In this subsection, some state-of-the-art backbones and necks for vision tasks will be introduced.
+\subsubsection{Backbones}
+    In \cite{simonyan2015a}, the team from University of Oxford uses very simple structure to extract the deep features of the input image. The image passes through a stack of convolutional 
+    layers, which has 3x3 kernels. The max-pooling layer follows some convolutional layers. This structure is very simple and widely used as baseline in some later works\cite{guan2019deep}
+    \cite{tammina2019transfer}. The ResNet family is popularly used for extracting features in vision tasks. Resnet-50\cite{7485869} is one of the most popular backbones for computer vision 
+    tasks. The depth of representations is of central importance for many visual recognition tasks. A so-called residual learning framework is presented to improve the depth of the network.
+    With the depth of neural network increasing, some challenges, like degradation and gradient vanishing, have also been exposed. Instead of learning the desired mapping $H(x)$ directly, 
+    The residual block learns another mapping $H(x) - x$, which is easier to be optimized. Resnet made it possible to train extremely deep networks, which led to significant progress in 
+    computer vision.
+
