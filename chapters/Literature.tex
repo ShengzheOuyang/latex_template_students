@@ -80,5 +80,35 @@
     tasks. The depth of representations is of central importance for many visual recognition tasks. A so-called residual learning framework is presented to improve the depth of the network.
     With the depth of neural network increasing, some challenges, like degradation and gradient vanishing, have also been exposed. Instead of learning the desired mapping $H(x)$ directly, 
     The residual block learns another mapping $H(x) - x$, which is easier to be optimized. Resnet made it possible to train extremely deep networks, which led to significant progress in 
-    computer vision.
-
+    computer vision.\\
+    \textbf{Transformer in backbones: }\cite{7803544} uses encoders to capture the features of interest with convolutional layers. The core of its structure is the hierarchical decoders 
+    which upsample the low-resolution input feature maps with max-pooling to reconstruct. This structure has a good trade-off between accuracy and memory but due to the compression of input, 
+    a lot of information is lost and the longer the input sequence, the worse the problem becomes. To solve this problem, Vaswani proposed a new architecture, Transformer which is also based 
+    on encoder-decoder architecture but integrals attention mechanism allowing modeling of dependencies without regard to their distance in the input or output sequences \cite{NIPS2017_3f5ee243}.
+    In contrast to traditional encoder-decoder architecture, the transformer uses Multi-Head Attention followed by a simple, position wise fully connected feed-forward network as an encoder 
+    to compute representations from input sequences and the decoder inserts an additional Multi-head attention to connect the output of encoders. 
+    The transformer is initially applied for textual information and currently, some researchers have also adapted it to deal with vision tasks as well.
+    \cite{dosovitskiy2021an} proposed a method called Vision Transformer(ViT), which directly implied transformer for vision tasks. The traditional transformer processes sequences of words,
+    while ViT divides the image into patches and uses the attention mechanism to find dependencies between different patches. The patches of the image could then be interpreted as the words 
+    in the traditional method. The images are divided into different with the fixed size (16x16), which means that it has a high computational complexity. Because each individual patch has 
+    to compute attention with the every other patch. This is one of the drawbacks of ViT. In \cite{9710580}, Swin-Transformer is presented. Instead of the fixed patch size,  Swin-Transformer
+    divided the image into some "local windows", e.g., a 7x7 patches. It reduces significantly the computational complexity. To gain the intetactions between different local windows, 
+    Swin-Transformer shifted the windows in different layers. Compare with single size feature maps of ViT, Swin-Transfomer starts from the small patches and merges them in deeper layers. Hence,
+    Swin-Transformer also has hierarchical features, which is similar with the convolutional based backbones like Resnet. This is good for aggregating multi-scales features in the following part.
+\subsubsection{Necks}
+    Feature Pyramid Networks (FPN)\cite{8099589} and U-Nets\cite{10.1007/978-3-319-24574-4_28} are two successful neural networks to integrate the feature maps of different scales.
+    FPN contain two pathways: bottom-up and top-down respectively. The feature parameters 
+    of the input image are extracted by the backbones and output proportionally sized feature maps at multiple levels with a scaling step of two in the bottom-up pathway. 
+    In the top-down pathway, the low-level feature map is added with the high-level feature map element-wise after upsampling. This process enhances the semantic strength 
+    of the features for better prediction. This process is independent of the backbone convolutional architectures, and in this paper, the author uses ResNet to extract features.
+    U-Net has an encoder-decoder structure. The encoder contracts the size of the image 
+    and increases the feature channels through max pooling, while the decoder performs the opposite pathway through up convolution. Concatenation with the correspondingly 
+    cropped feature map from the contracting path is necessary to prevent the loss of border pixels in up convolution. The differences between U-Net and FPN are as follows:
+    \begin{itemize}
+    \item [1)] FPN integrates feature maps of different scales through element-wise addition, while U-Net integrates through concatenation.      
+    \item [2)] FPN predicts through every feature map in the top-down pathway, while U-Net only does prediction at the final layer.
+    \item [3)] FPN enlarges the feature map through nearest neighbor upsampling in the top-down pathway, while U-Net uses up convolution. 
+    \item [4)] FPN's low-level features are the same size as the high-level features when upsampled by a factor of 2, whereas in U-Net 
+    they are usually not, requiring cropping on the low-level features to match the scaled-up high-level features.
+    \end{itemize}
+\subsection{Deep learning for wire harness's detection}
