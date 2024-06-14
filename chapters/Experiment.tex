@@ -150,8 +150,9 @@
 		\caption{Validation Results of pretraining}
 		\label{Pretraining Results}
 	\end{figure}
-	And the model is trained again with the real images by transfer learning. The validation loss is $7\%$ lower than not using pretraining. An example of validated result is 
-	\autoref{Validation Results using transfer learning}
+	And the model is trained again with the real images by transfer learning. The validation loss is $7\%$ lower than not using pre-training. An example of validated result is 
+	\autoref{Validation Results using transfer learning}. Additionally, the training speed is also faster. The model needs just 119 epochs to converge to
+	the lowest validation loss. Compared to the case where no pre-training was used, speed was increased by about 33%
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.6\linewidth]{example_images/usePretraining_NoTransformer}
@@ -203,3 +204,21 @@
 			0&  0&1
 		\end{bmatrix} \label{eq:new anno}
 	\end{align}
+\section{Eleven branched wire harness}
+	In last section, the idea of detecting key points to construct the spline model of wire harness is verified, see \autoref{Validation Results using transfer learning}. In the case of 
+	detecting the three branched wire harness with overlapping, the model could detect each branch precisely and the problem of overlapping is also overcome. But in industry, the wire harness
+	on car has more branches\autoref{Eleven branched wire harness}, which has much complicated topology\autoref{Topology of eleven branched wire harness}.
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.6\linewidth]{example_images/eleven_branches_wire}
+		\caption{Eleven branched wire harness}
+		\label{Eleven branched wire harness}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.6\linewidth]{example_images/topology_eleven_branches}
+		\caption{Topology of eleven branched wire harness}
+		\label{Topology of eleven branched wire harness}
+	\end{figure}
+	
+

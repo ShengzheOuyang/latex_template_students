@@ -1,0 +1,41 @@
+\chapter{Theoretical Foundations}
+In this chapter, the theoretical Foundations of deep learning model will be introduced. 
+\section{Basis of deep neural network}
+    In \cite{Goodfellow-et-al-2016}, the concept of deep learning is well described. The deep learning is actually a solution that allows 
+    computer to learn from the experiences and understand the world. The entire world consists of hierarchical concepts and relations between 
+    each concept with the simpler concept in the next level are also included. This concept of structural hierarchy allows computers to learn 
+    from some simple concepts to deeper concepts to solve complex problems, see \autoref{Computer learns from the hierarchical structure of concepts}.
+    \begin{figure}
+		\centering
+		\includegraphics[width=0.6\linewidth]{example_images/ConceptDL}
+		\caption{Computer learns from the hierarchical structure of concepts}
+		\label{Computer learns from the hierarchical structure of concepts}
+	  \end{figure}
+    The more layers the structure has, the deeper concepts the computer can learn. After the learning, computers can predict phenomenon and make decisions 
+    based on what they have learned. The high-level schematic could be summarized in \autoref{The high-level schematic of deep learning}. The phenomenon or object 
+    of interests is the input of the deep learning model. Some simple features will be extracted through sensors, for example the image of the wire harness is extracted 
+    through RGB-Camera. The following deep neural network(DNN) can extract more abstract features from the simple features and the computer learns the relations between 
+    the features after different layers. After the DNN, the further extracted abstract features should be mapped to the output.  
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.6\linewidth]{example_images/DeepLearningSchematic}
+      \caption{The high-level schematic of deep learning}
+      \label{The high-level schematic of deep learning}
+    \end{figure}
+  \section{Mathematical formulations}
+  The basic principles of how deep learning works were clarified in the previous section. The next questions are: what is the layer? How does it work to extract features?\\
+  In order to answer these two questions more intuitively, mathematical expressions should first be defined. The input simple feature should is defined as $x_{0}$. 
+  And the next extracted abstract features are defined as $x_{l}$, where l presents the level of the layer, see \autoref{Mathematical explanation of the feature extraction by layers}.
+  The layers are actually defined as some first-order linear mathematical expressions $L _{l}$ with the nonlinear activation function $\Phi_{l}$ in \autoref{eq:layer}, 
+  where $w$ is the weight and $b$ is the bias. The nonlinear activation function is important. Without it, the output could be just represented from input by one single layer linearly,
+  which is not enough to learn the most of the concepts in the world.
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{example_images/mathLayers}
+    \caption{Mathematical explanation of the feature extraction by layers}
+    \label{Mathematical explanation of the feature extraction by layers}
+  \end{figure}
+  \begin{align}
+    x_{l}=\Phi _{l}(w_{l} \cdot x_{l-1}+ b_{l-1})
+     \label{eq:layer}
+  \end{align}
