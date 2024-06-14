@@ -8,7 +8,7 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
     from some simple concepts to deeper concepts to solve complex problems, see \autoref{Computer learns from the hierarchical structure of concepts}.
     \begin{figure}
 		\centering
-		\includegraphics[width=0.6\linewidth]{example_images/ConceptDL}
+		\includegraphics[width=0.9\linewidth]{example_images/ConceptDL}
 		\caption{Computer learns from the hierarchical structure of concepts}
 		\label{Computer learns from the hierarchical structure of concepts}
 	  \end{figure}
@@ -83,4 +83,13 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
     \caption{Parameters are optimized by backpropagation}
     \label{Parameters are optimized by backpropagation}
   \end{figure}
-  
+  \subsection{Loss Function}
+  The loss function in deep learning describes the difference between the groundtruth and the predicted output. The model parameters are optimized and updated by minimizing 
+  this function and backpropagating. The loss function could be minimized because it has a gradient $G$. In \autoref{The loss decreases along the direction of the gradient},
+  $\theta$ is the model parameter, such as weight, bias. If the gradient is so small, then the loss is difficult to converge,
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{example_images/loss function}
+    \caption{The loss decreases along the direction of the gradient $G$}
+    \label{The loss decreases along the direction of the gradient}
+  \end{figure}
