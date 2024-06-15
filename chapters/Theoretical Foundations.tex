@@ -65,9 +65,9 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
   \subsubsection{Optimization through backpropagated}
   So far, the process of how initial simple features are extracted and transformed step by step into deeper features through different layers and finally mapped into outputs, 
   i.e., predictions, has been well explained. Then a further question follows: how do networks make accurate predictions?\\
-  The transformations and mapping are basically performed by \autoref{eq:layer}. Its result is determined by the activation function $\Phi$, weights $w$ and bias$b$. 
+  The transformations and mapping are basically performed by \autoref{eq:layer}. Its result is determined by the activation function $\Phi$, weights $w$ and bias $b$. 
   A GroundTruth $y^{\star }$ needs to be artificially introduced to guide the network to learn the correct behavior, i.e. to predict the desired output. This is explained as
-  learning from examples and is explained in \cite{russel2010}, which is also well-known as supervised learning. \\
+  learning from examples in \cite{russel2010}, which is also well-known as supervised learning. \\
   The prediction of the model or the output after mapping is defined as $y$. A Loss function could be derived. y is actually the result of Mapping, which is actually the output 
   of activation function $\Phi(x)$. It can be further backpropagated onto the feutures from last layer. The optimal weight $w^{star}$ and bais $b^{star}$ are obtained by 
   minimizing the loss equation, see \autoref{eq:Optimization by loss function}. 
@@ -86,10 +86,44 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
   \subsection{Loss Function}
   The loss function in deep learning describes the difference between the groundtruth and the predicted output. The model parameters are optimized and updated by minimizing 
   this function and backpropagating. The loss function could be minimized because it has a gradient $G$. In \autoref{The loss decreases along the direction of the gradient},
-  $\theta$ is the model parameter, such as weight, bias. If the gradient is so small, then the loss is difficult to converge,
+  $\theta$ is the model parameter, such as weight, bias. If the gradient is so small, then the loss is difficult to converge. Or if it is so big, then the loss changes oscillatory.
+  Hence, a proper loss function is important for deep learning. 
   \begin{figure}
     \centering
     \includegraphics[width=0.6\linewidth]{example_images/loss function}
     \caption{The loss decreases along the direction of the gradient $G$}
     \label{The loss decreases along the direction of the gradient}
+  \end{figure}
+  For example, l1 in \autoref{eq:l1 loss} and l2-loss function in \autoref{eq:l2 loss} are widely used for regression tasks.
+  \begin{align}
+    l_1=\sum_{i=1}^{n} \left | y-y^{\star} \right |  
+     \label{eq:l1 loss}
+  \end{align}
+  \begin{align}
+    l_2=\sum_{i=1}^{n}(y-y^{\star})^2
+     \label{eq:l2 loss}
+  \end{align}
+  In contrast to the l1-loss function, which is not differentiable at zero, l2 is more often chosen as the loss function because the l2 loss equation is differentiable everywhere.
+  But there is also a drawback of l2-loss. When there is an unusual data, the l2 loss will become huge due to squaring. It will affect the training. So the choice of loss function 
+  needs to be considered depending on different situations, and sometimes it is necessary to test the effect of different loss functions by doing experiments. In \cite{Sun_2018_ECCV},
+  they experimented both l1 and l2-loss for the joint regression task and found that l1-loss function worked consistently better than l2-loss function.\\
+  Some other loss functions for segmentation tasks are also introduced in \cite{azad2023loss}. Cross Entropy(CE) loss, in \autoref{eq:CE loss}, is used to the difference between two
+  probability distributions. $y^{\star}$ is a one-hot encoded vector and only the targets will be considered.
+  \begin{align}
+    L_{CE}(y,t) = -\sum_{i=1}^{n} y^{\star} \star log(y_{i})
+     \label{eq:CE loss}
+  \end{align}
+  \subsection{Hyperparameter}
+  In contrast to the model parameters, hyperparameters cannot be optimized at the backpropagation, but they affect the performance of the model in the meantime as well. 
+  In \cite{4e568dfccc734aa6a8184f781bac6353}, the hyperparameters are divided into two groups: (1) performance-oriented parameters, which could influence the system's processing
+  throughout, such as the number of threads working simultaneously, i.e., number of workers. (2) accuracy-oriented parameters, which could influence the accuracy of the training, e.g.,
+  learning rate and drop out probabilities. There is an overlap between these two groups, and some parameters will affect them both, such as the batch size.\\
+  Proper hyperparameters are very important for the training, which significantly affects the accuracy and system performance of the model. And tuning hyperparameters requires experience 
+  and patience from researchers, because there might be trade-off between some parameters, for example in \autoref{Trade-off between batch size}, When the batch size increases, the 
+  accuracy of the model increases and the system performance decreases.
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{example_images/batchSize}
+    \caption{Trade-off between batch size}
+    \label{Trade-off between batch size}
   \end{figure}
