@@ -1,6 +1,6 @@
 \chapter{Theoretical Foundations}
 In this chapter, the theoretical Foundations of deep learning model will be introduced. 
-\section{Basis of deep neural network}
+\section{Basis of deep learning}
 \subsection{Basic concept}
     In \cite{Goodfellow-et-al-2016}, the concept of deep learning is well described. The deep learning is actually a solution that allows 
     computer to learn from the experiences and understand the world. The entire world consists of hierarchical concepts and relations between 
@@ -23,16 +23,25 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
       \caption{The high-level schematic of deep learning}
       \label{The high-level schematic of deep learning}
     \end{figure}
-  \subsection{Mathematical formulations}
-  \subsubsection{Layers}
+  \subsection{Deep neural network}
+  \subsubsection{Dense neural networks}
   The basic principles of how deep learning works were clarified in the previous section. The next questions are: what is the layer? How does it work to extract features?\\
-  In order to answer these two questions more intuitively, mathematical expressions should first be defined. The input simple feature should is defined as $x_{0}$. 
-  And the next extracted abstract features are defined as $x_{l}$, where l presents the level of the layer, see \autoref{Mathematical explanation of the feature extraction by layers}.
+  In order to answer these two questions more intuitively, the simplest neural network architecture, Dense Neural Network (DNN)\cite{inproceedings}, should be introduced firstly. 
+  The DNN simulates the activities of the human brain, which is composed of multiple layers. There could be many neurons in each layer, and all of them are fully connected to 
+  all the neurons in the previous layer, see \autoref{Dense neural network}
+  The input of the first dense layer is defined as $x_{0}$ and it is also the simple input feature of the network. And the next extracted abstract features are defined as $x_{l}$, 
+  where l presents the level of the layer, see \autoref{Mathematical explanation of the feature extraction by layers}.
   The layers are actually defined as some first-order linear mathematical expressions $L _{l}$ with the nonlinear activation function $\Phi_{l}$ in \autoref{eq:layer}, 
   where $w$ is the weight and $b$ is the bias. The nonlinear activation function is important. Without it, the output could be just represented from input by one single layer linearly,
   which is not enough to learn the most of the concepts in the world. Some activation functions are explained in \cite{0706bf17a845490688ef4d7d19df65ba}, e.g., ReLU in \autoref{eq:ReLU}, 
   Sigmoid in \autoref{eq:Sigmoid}, Softmax in \autoref{eq:softmax}. The final step of Schematic, Mapping, can actually be regarded as a layer, which has different options depending on 
   the specific task. For example, for classification, the output layer could be softmax, because it maps the features to probabilities. 
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{example_images/DNN}
+    \caption{Dense neural network}
+    \label{Dense neural network}
+  \end{figure}
   \begin{figure}
     \centering
     \includegraphics[width=0.9\linewidth]{example_images/mathLayers}
@@ -62,7 +71,7 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
     \Phi(x_{i}) = \frac{exp(x_{i})}{\sum_{j}exp(x_{j}) } 
      \label{eq:softmax}
   \end{align}
-  \subsubsection{Optimization through backpropagated}
+  \subsubsection{Optimization through backpropagation}
   So far, the process of how initial simple features are extracted and transformed step by step into deeper features through different layers and finally mapped into outputs, 
   i.e., predictions, has been well explained. Then a further question follows: how do networks make accurate predictions?\\
   The transformations and mapping are basically performed by \autoref{eq:layer}. Its result is determined by the activation function $\Phi$, weights $w$ and bias $b$. 
@@ -110,7 +119,7 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
   Some other loss functions for segmentation tasks are also introduced in \cite{azad2023loss}. Cross Entropy(CE) loss, in \autoref{eq:CE loss}, is used to the difference between two
   probability distributions. $y^{\star}$ is a one-hot encoded vector and only the targets will be considered.
   \begin{align}
-    L_{CE}(y,t) = -\sum_{i=1}^{n} y^{\star} \star log(y_{i})
+    L_{CE}(y,t) = -\sum_{i=1}^{n} y^{\star} \cdot log(y_{i})
      \label{eq:CE loss}
   \end{align}
   \subsection{Hyperparameter}
@@ -127,3 +136,10 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
     \caption{Trade-off between batch size}
     \label{Trade-off between batch size}
   \end{figure}
+  \section{Convolutional neural network}
+    DNNs can extract very deep features by connecting multiple layers. But Yann LeCun in \cite{LeCun1995-LECCNF} also pointed out some drawbacks:
+    \begin{itemize}
+      \item [1)] The number of parameters is huge and grows quadratically with the number of neurons per layer, which could lead to the problems like overfitting and memories.
+      \item [2)] The topology of the input is entirely ignored and it is not suitable to learn global features due to the full connections of neurons. But the image 
+      has a strong 2D local structure. Therefore, images are also not suitable as inputs to DNNs.
+    \end{itemize}
