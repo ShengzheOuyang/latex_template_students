@@ -111,4 +111,26 @@
     \item [4)] FPN's low-level features are the same size as the high-level features when upsampled by a factor of 2, whereas in U-Net 
     they are usually not, requiring cropping on the low-level features to match the scaled-up high-level features.
     \end{itemize}
-\subsection{Deep learning for wire harness's detection}
+\section{Wire harness detection}
+    In order for an actuator to be able to operate the wire harness instead of the human, it needs to be accurately localized. There are mainly two approaches: 
+    \begin{itemize}
+        \item [1)] Use initially good estimated model of wire harness to track the obtained point cloud from the camera.
+        \item [2)] Use deep learning segmentation method to obtain a mask of the wire harness.
+    \end{itemize}
+\subsection{Registration through pre-knowledge of wire harness}
+    Two stereo cameras are used to localize the wire harness 
+    on workbench in \cite{10.1007/978-3-031-27933-1_31}. The first camera obtained the rough localization of the wire harness. The second camera will move over the rough estimated position 
+    obtained from the first camera and the individual component of interests on wire harness could be localized, which allows a high resolution pose estimation. This approach could estimate 
+    the position of target component precisely if there is a sufficiently good estimate of the initial configuration to perform successful registration.
+    In \cite{doi:10.1177/0278364919841431}, the researcher presents a method for the registration called Structure Preserved Registration (SPR), where each object node is regarded as a Gaussian 
+    centroid, and the point cloud is one dataset sampled from the mixture Gaussians. Through the maximum likelihood estimation for the registration with the sampled point cloud to obtain the 
+    best estimation of the node positions, i.e., the centroids of the Gaussian. In expectation step(E-step), it computes the posterior probability that the point cloud is assigned to the
+    centroid through by using the centroid position and variance from the previous step. In maximization step(M-step), the likelihood is maximized to obtain the best estimation of the centroid position 
+    and variance. These two steps are iterated until the log-likelihood function is converged. The presented method could track deformable objects without branch accurately, robustly, and efficiently. 
+    In \cite{9665147}, a modification to the method of SPR is proposed to enhance its capability for tracking DLOs with multiple branches. This modified method releases the SPR's problem of incorrect 
+    registration of branches by introducing branch-wise probability estimates in the underlying Gaussian Mixture Model.
+
+\subsection{Wire harness segmentation}
+
+\section{Dataset expansion}
+

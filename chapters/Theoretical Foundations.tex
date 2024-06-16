@@ -134,36 +134,37 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
     \caption{Trade-off between batch size}
     \label{Trade-off between batch size}
   \end{figure}
-  \section{Convolutional neural network}
-    DNN can extract very deep features by connecting multiple layers. But Yann LeCun in \cite{LeCun1995-LECCNF} also pointed out some drawbacks:
-    \begin{itemize}
-      \item [1)] The number of parameters is huge and grows quadratically with the number of neurons per layer, which could lead to the problems like overfitting and memories.
-      \item [2)] The topology of the input is entirely ignored and it is not suitable to learn global features due to the full connections of neurons. But the image 
-      has a strong 2D local structure. Therefore, images are also not suitable as inputs to DNN.
-    \end{itemize}
-    Convolutional neural network(CNN) doesn't suffer from either of these problems because of the  weight sharing technique and local connectivity. 
-    The input is defined as a 2D-image with $C_{l-1}$ channels, length $H_{l-1}$ and width $W_{l-1}$. The convolutional layer is a four dimensional tensor $C_{l-1} \times C_{l} \times K_{l} \times K_{l}$,
-    which means it has $C_{l}$ kernels and each kernel has $C_{l-1}$ filters of size $K_{l} \times K_{l}$. Each channel of the input corresponds to a filter of the kernel. All channels corresponding to 
-    the sliding window are mapped into a new channel for the output through all filters of a kernel, see \autoref{Convolutional neural network}. The relationship between the size of the output and 
-    the size of the input is shown in \autoref{eq:CNN size change}. When extract the deep features of images, the size of the image will be compressed and the number of channels will increase.
-    \begin{figure}
-      \centering
-      \includegraphics[width=0.9\linewidth]{example_images/CNN}
-      \caption{Convolutional neural network}
-      \label{Convolutional neural network}
-    \end{figure}
-    \begin{equation}
-    \begin{aligned}
-      H_{l}&=H_{l-1}-K_{l}+1\\
-      B_{l}&=B_{l-1}-K_{l}+1
-       \label{eq:CNN size change}
-    \end{aligned}
-    \end{equation}
+\section{Convolutional neural network}
+  DNN can extract very deep features by connecting multiple layers. But Yann LeCun in \cite{LeCun1995-LECCNF} also pointed out some drawbacks:
+  \begin{itemize}
+    \item [1)] The number of parameters is huge and grows quadratically with the number of neurons per layer, which could lead to the problems like overfitting and memories.
+    \item [2)] The topology of the input is entirely ignored and it is not suitable to learn global features due to the full connections of neurons. But the image 
+    has a strong 2D local structure. Therefore, images are also not suitable as inputs to DNN.
+  \end{itemize}
+  Convolutional neural network(CNN) doesn't suffer from either of these problems because of the  weight sharing technique and local connectivity. 
+  The input is defined as a 2D-image with $C_{l-1}$ channels, length $H_{l-1}$ and width $W_{l-1}$. The convolutional layer is a four dimensional tensor $C_{l-1} \times C_{l} \times K_{l} \times K_{l}$,
+  which means it has $C_{l}$ kernels and each kernel has $C_{l-1}$ filters of size $K_{l} \times K_{l}$. Each channel of the input corresponds to a filter of the kernel. All channels corresponding to 
+  the sliding window are mapped into a new channel for the output through all filters of a kernel, see \autoref{Convolutional neural network}. The relationship between the size of the output and 
+  the size of the input is shown in \autoref{eq:CNN size change}. When extract the deep features of images, the size of the image will be compressed and the number of channels will increase.
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{example_images/CNN}
+    \caption{Convolutional neural network}
+    \label{Convolutional neural network}
+  \end{figure}
+  \begin{equation}
+  \begin{aligned}
+    H_{l}&=H_{l-1}-K_{l}+1\\
+    B_{l}&=B_{l-1}-K_{l}+1
+      \label{eq:CNN size change}
+  \end{aligned}
+  \end{equation}
   It is also possible to add modifications to the convolution, such as padding $P$, stride $S$, dialation $D$. When all modifications are included, the size of output image is in \autoref{eq:Modifications} 
   \begin{equation}
   \begin{aligned}
     H_{l}&=\frac{H_{l-1}+2P-(k_{l}-1)D-1}{S}\\
     W_{l}&=\frac{W_{l-1}+2P-(k_{l}-1)D-1}{S}
-     \label{eq:Modifications}
+      \label{eq:Modifications}
   \end{aligned}
   \end{equation}
+\section{Transformer}
