@@ -112,7 +112,12 @@
     they are usually not, requiring cropping on the low-level features to match the scaled-up high-level features.
     \end{itemize}
 \section{Wire harness detection}
-    In order for an actuator to be able to operate the wire harness instead of the human, it needs to be accurately localized. There are mainly two approaches: 
+    In order for an actuator to be able to operate the wire harness instead of the human, it needs to be accurately localized. In contrast to rigid objects, the BDLOs' degree 
+    of freedom is infinite. So their geometrical configuration changes during manipulation, which poses great challenge for automatic manipulation\cite{9665147}. 
+    The wire harness consists of k branches. The first node has no parents, whereas all 
+    following nodes have exactly one parent node\cite{10161483}. To localize the harness and reconstruct the topology, every individual branch should be localized precisely. 
+    However, after localization, some parts of the branch are still missing. Several researchers have proposed approaches to improve the accuracy of localization and topology reconstruction. 
+    There are mainly two approaches: 
     \begin{itemize}
         \item [1)] Use initially good estimated model of wire harness to track the obtained point cloud from the camera.
         \item [2)] Use deep learning segmentation method to obtain a mask of the wire harness.
@@ -128,9 +133,12 @@
     centroid through by using the centroid position and variance from the previous step. In maximization step(M-step), the likelihood is maximized to obtain the best estimation of the centroid position 
     and variance. These two steps are iterated until the log-likelihood function is converged. The presented method could track deformable objects without branch accurately, robustly, and efficiently. 
     In \cite{9665147}, a modification to the method of SPR is proposed to enhance its capability for tracking DLOs with multiple branches. This modified method releases the SPR's problem of incorrect 
-    registration of branches by introducing branch-wise probability estimates in the underlying Gaussian Mixture Model.
-
+    registration of branches by introducing branch-wise probability estimates in the underlying Gaussian Mixture Model. In \cite{10161483}, Manuel proposed a method for matching the topology of a branched 
+    deformable linear object to camera sensor data. Features are extracted from camera images to construct a graph-based topology representation, which is matched to a graph-based topology 
+    representation of the known branched deformable linear object. The matching cost function is defined as the difference between the modeled topology 
+    and the estimated topology and is minimized to obtain optimal mapping, but it is only implemented for non-overlapping wire scenarios.
 \subsection{Wire harness segmentation}
-
+    The registration method could track the point clouds to localize the wire harness precisely and robustly. However, it has also two drawbacks: (1) It needs previous knowleadges of the 
+    wire harness. (2) It suffers from the problem of overlapped branches, which is common for wire harness. 
 \section{Dataset expansion}
 
