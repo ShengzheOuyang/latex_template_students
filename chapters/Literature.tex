@@ -43,9 +43,10 @@
     \cite{10260646} is an implementation of mask RCNN for instance segmentation of the wire harness. It predicts the topology features such as overlapping points and branch
     points. These extracted features are then used for topology matching with their sensor representations.\\
 \subsection{keypoints detection}
-    While the object detection are powerful to classify and localize the instances, keypoints detection offers more detailed information about the structures. It is especially
-    useful in industry, e.g., grabbing the wire harness, only some keypoints of interests are needed for determine the grabbing point. Compare with the instance segmentation, 
-    keypoints detection asks for less information of annotation. This is quite helpful because there are almost no open source harness datasets available.\\
+    While the object detection are powerful to classify and localize the instances keypoints detection has several advantages: (1) it has less computational effort, which
+    is better for real-time detection. (2) It is more useful for some specific task, for example grabbing the wire harness, as the actuator needs the precise position of the grabbing point
+    on wire harness. (3) It is easier for collecting the datasets, only several keypoints are needed to be annotated. This is quite helpful because there are almost no open 
+    source harness datasets available.\\
     There are two main approaches for keypoints detection: Keypoint regression strategies and Heatmap regression strategies. 
     \begin{itemize}
         \item [(1)] \textbf{Keypoint regression strategies: } This is the direct method for keypoints detection. The position of key points, such as joints, is directly 
@@ -138,7 +139,24 @@
     representation of the known branched deformable linear object. The matching cost function is defined as the difference between the modeled topology 
     and the estimated topology and is minimized to obtain optimal mapping, but it is only implemented for non-overlapping wire scenarios.
 \subsection{Wire harness segmentation}
-    The registration method could track the point clouds to localize the wire harness precisely and robustly. However, it has also two drawbacks: (1) It needs previous knowleadges of the 
-    wire harness. (2) It suffers from the problem of overlapped branches, which is common for wire harness. 
+    The registration method could track the point clouds to localize the wire harness precisely and robustly. However, it has also two drawbacks: (1) It needs previous knowledge of the 
+    wire harness. (2) It suffers from the problem of overlapped branches, which is common for wire harness. Many scientists have focused on developing segmentation method to avoid these 
+    problems. \cite{Caporali2022}, an algorithm called FASTDLO is presented. The image of deformable linear objects(DLOs) is processed initially with a deep convolutional neural network for background segmentation 
+    to obtain a binary mask. After obtaining endpoints, sections, and intersections through skeleton pixel classification, which are keypoints of the DLOs, segments are generated, 
+    but intersection-relative areas are discarded. With a shallow neural network, connection probabilities are predicted, and the discarded areas are processed. Segments are then 
+    concatenated, intersections are reconstructed, and covered with RGB colors. In this paper, the problem of overlapping is overcome.
+\subsection{pixel-wise representation}
+    The segmentation method has high complexity of computation, which is not suitable for real-time detection. Instead of segmenting the whole pixel of DLOs, in \cite{degregorio2018lets}
+    the author just analyzes some super pixels, i.e., super pixels. The best path between the seed points will be found through some similar features of DLOs, e.g, similarity of appearance as well as 
+    curvature. 
+    In \cite{10167643}, the author points out that FASTDLO
+    was struggled to solve some really complicated scenes of DLOs, e.g., high curvature and many overlaps and intersections. In addition, although the super pixel method has a 
+    high accuracy, but it has a big number of hyperparameters requires the DLOs with the same color. So another robust algorithm 
+    for real-time detection of DLOs is presented, capable of producing an ordered pixel sequence of each DLO’s centerline along with segmentation masks. In contrast to FASTDLO, it 
+    handles intersections robustly by choosing the combination of paths that minimizes the cumulative bending energy of the DLO(s). The branch points are important for the skeleton 
+    but could improve the complexity of the problem for the walker to choose the possible path.  To avoid this, in \cite{10160437}, the author removes 
+    the branch points after the skeleton and postpones the decision for further processing. So initially only the endpoints are considered, and the walker starts from one 
+    of them till arriving at the other one. After walking through all segments and ordering, a sequence of knot points is extracted to determine the b-spline. Compared to the previous 
+    method like FASTDLO and super pixel, it does not need deep learning model and decrease the computaitional complexity further. 
 \section{Dataset expansion}
 
