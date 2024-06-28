@@ -112,7 +112,7 @@
     \item [4)] FPN's low-level features are the same size as the high-level features when upsampled by a factor of 2, whereas in U-Net 
     they are usually not, requiring cropping on the low-level features to match the scaled-up high-level features.
     \end{itemize}
-\section{Wire harness detection}
+\section{Wire harness detection} 
     In order for an actuator to be able to operate the wire harness instead of the human, it needs to be accurately localized. In contrast to rigid objects, the BDLOs' degree 
     of freedom is infinite. So their geometrical configuration changes during manipulation, which poses great challenge for automatic manipulation\cite{9665147}. 
     The wire harness consists of k branches. The first node has no parents, whereas all 
@@ -123,7 +123,7 @@
         \item [1)] Use initially good estimated model of wire harness to track the obtained point cloud from the camera.
         \item [2)] Use deep learning segmentation method to obtain a mask of the wire harness.
     \end{itemize}
-\subsection{Registration through pre-knowledge of wire harness}
+\subsection{Registration through pre-knowledge of wire harness} \label{Registration through pre-knowledge of wire harness}
     Two stereo cameras are used to localize the wire harness 
     on workbench in \cite{10.1007/978-3-031-27933-1_31}. The first camera obtained the rough localization of the wire harness. The second camera will move over the rough estimated position 
     obtained from the first camera and the individual component of interests on wire harness could be localized, which allows a high resolution pose estimation. This approach could estimate 
@@ -145,18 +145,37 @@
     to obtain a binary mask. After obtaining endpoints, sections, and intersections through skeleton pixel classification, which are keypoints of the DLOs, segments are generated, 
     but intersection-relative areas are discarded. With a shallow neural network, connection probabilities are predicted, and the discarded areas are processed. Segments are then 
     concatenated, intersections are reconstructed, and covered with RGB colors. In this paper, the problem of overlapping is overcome.
-\subsection{pixel-wise representation}
+\subsection{Spline representation}
     The segmentation method has high complexity of computation, which is not suitable for real-time detection. Instead of segmenting the whole pixel of DLOs, in \cite{degregorio2018lets}
     the author just analyzes some super pixels, i.e., super pixels. The best path between the seed points will be found through some similar features of DLOs, e.g, similarity of appearance as well as 
-    curvature. 
+    curvature. It allows to compute the most compatible b-spline of each object.
     In \cite{10167643}, the author points out that FASTDLO
-    was struggled to solve some really complicated scenes of DLOs, e.g., high curvature and many overlaps and intersections. In addition, although the super pixel method has a 
-    high accuracy, but it has a big number of hyperparameters requires the DLOs with the same color. So another robust algorithm 
+    was struggled to solve some really complicated scenes of DLOs, e.g., high curvature and many overlaps and intersections. In addition, although the super-pixel method has a 
+    high accuracy, but it has a big number of hyperparameters and requires the DLOs with the same color. Another robust algorithm 
     for real-time detection of DLOs is presented, capable of producing an ordered pixel sequence of each DLO’s centerline along with segmentation masks. In contrast to FASTDLO, it 
     handles intersections robustly by choosing the combination of paths that minimizes the cumulative bending energy of the DLO(s). The branch points are important for the skeleton 
-    but could improve the complexity of the problem for the walker to choose the possible path.  To avoid this, in \cite{10160437}, the author removes 
+    but could improve the complexity of the problem for the walker to choose the possible path. To avoid this, in \cite{10160437}, the author removes 
     the branch points after the skeleton and postpones the decision for further processing. So initially only the endpoints are considered, and the walker starts from one 
     of them till arriving at the other one. After walking through all segments and ordering, a sequence of knot points is extracted to determine the b-spline. Compared to the previous 
-    method like FASTDLO and super pixel, it does not need deep learning model and decrease the computaitional complexity further. 
+    FASTDLO and super-pixel methods, it does not need deep learning model and decrease the computational complexity further. 
 \section{Dataset expansion}
+    In contrast to unsupervised learning, supervised learning requires a large dataset to train the model. It plays the role of teaching the model to learn the desired knowledge.
+    If the dataset for training is too small, then there is a risk of overfitting, i.e., the dataset is too small or too simple for the model, which is not good for generalization.
+    However, the experts suffer from annotating the original data, because it is time-consuming and inefficient. Scientists have explored different paths to expand the dataset 
+    for a better training. 
+\subsection{Synthesized dataset}
+    Collecting real data is difficult, but combining with the known features of the target and Synthesizing the dataset artificially are simpler. The background of the object in the 
+    image will strongly influence the detection. 
+    In \cite{9349395}, Riccardo proposes an approach that uses an image of the target object placed in front of a monochromatic background. By employing the chroma-key technique,
+    it can easily obtain the masks of the target object and replace the background to produce a domain-independent dataset. In \cite{Tremblay_2018_CVPR_Workshops}, Jonathan combines 
+    both to synthesize datasets, which were generated by placing 3D household object models in virtual environments. Besides changing the environment of an object, the objects are 
+    also changed through translation and rotation. In \cite{8972568}, the authors train the neural network with the rendered spline curve to detect the real spline. Although this 
+    method is easy to be implemented, but there is still a gap between the rendered and the real spline. e.g., lighting, texture on the spline. They have developed a method to minimize
+    the gap without groundtruth. The state of the spline is estimated by a differentiable render as membership weights. The membership weights present the possibilities, weather each 
+    pixel belongs to the spline or the background. Implement the M-step of GMM method, which is mentioned in \ref{Registration through pre-knowledge of wire harness}, to estimate the 
+    GMM parameters such as the centroid position and variance. In E-step, the new membership weights will be calculated to replace the old weight. Because the computerized tomography(CT) 
+    images have higher accuracy and are easier to be segmented, so in \cite{SONG2022106706}, Song wants using transfer learning to optimize the segmentation of ultrasound(US) images. But 
+    there are also a big gap between these two kind of images, thus transfer learning is difficult to be implemented. The cycle generative adversarial network (CycleGAN) is used to map the 
+    CT images to US images and doesn't need annotated dataset. The synthesized US images have the features of the real images. After the training with the synthesized images, the model is 
+    trained and fine-tuned with the real US images. The result shows that it improves the accuracy of segmentation of US images significantly. 
 
