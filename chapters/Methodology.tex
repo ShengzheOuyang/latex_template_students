@@ -1,6 +1,7 @@
 \chapter{Methodology}
 In this chapter, the methodologies and tools for preparing the dataset, designing the model and experiment will be introduced. 
 \section{Dataset Preparation}
+    \subsection{Generate dataset manually}
     The stereo vision camera, fixed on the workbench, is implemented for takes pictures of wire harness \autoref{stereoCamera1}. Once the photograph is completed, the images will be uploaded and stored 
     in the bucket to the database MinIO.
     \begin{figure}
@@ -30,8 +31,8 @@ In this chapter, the methodologies and tools for preparing the dataset, designin
             \label{eq:boundary conditions}
         \end{aligned}
     \end{equation}
-    The length and bending energy of the spline are calculated. The spline curve actually consists of numerous points in the program. The length could be calculated
-    as $Algorithm$ \autoref{Calculate the length of a spline}.
+    The length and bending energy of the spline are calculated. The spline curve actually consists of numerous points.  The length of the entire spline curve 
+    is obtained by summing the Euclidean distances of neighboring discrete points. The algorithm is shown in \autoref{Calculate the length of a spline}.
     \begin{algorithm} 
         \caption{Calculate the length of a spline}
         \label{Calculate the length of a spline}
@@ -39,7 +40,7 @@ In this chapter, the methodologies and tools for preparing the dataset, designin
         \STATE \textbf{Input:} $X$
         \STATE $Length \leftarrow [\quad]$
         \FOR{$(x_{k},y_{k}),(x_{k+1},y_{k+1}) \in X$}
-            \STATE $Distance \leftarrow (x_{k+1}-x_{k})^2+(y_{k+1}-y_{k})^2$
+            \STATE $Distance \leftarrow \sqrt{(x_{k+1}-x_{k})^2+(y_{k+1}-y_{k})^2}$
             \STATE $Length.append(Distance)$
         \ENDFOR
         \RETURN $\text{sum}(Length)$
@@ -52,7 +53,7 @@ In this chapter, the methodologies and tools for preparing the dataset, designin
             \label{eq:bending energy}
         \end{aligned}
     \end{equation}
-    The spline is defined in parametric form as $s(t) = (x(t),y(t))$ and the curvature spline be calculated as \autoref{curvature}. 
+    The spline is defined in parametric form as $s(t) = (x(t),y(t))$ and the curvature spline be calculated as \autoref{eq:curvature}. 
     \begin{equation}
         \begin{aligned}
             \kappa(t) = \frac{\dot{x}(t) \ddot{y}(t) - \dot{y}(t) \ddot{x}(t)}{(\dot{x}(t)^2 + \dot{y}(t)^2)^{3/2}}
@@ -66,12 +67,20 @@ In this chapter, the methodologies and tools for preparing the dataset, designin
             \label{eq:curvature discrete form}
         \end{aligned}
     \end{equation}
-    %After one branch is labeled, the user could press up key to start labeling the next segment.  
+    After one branch is labeled, the user could press up key to start labeling the next segment. The number of nodes on each segment should be the same. The sequences of 
+    segments could also be adjusted. This is important for the model to learn the structure of the wire harness when the segments are not sorted in the program or the complexity 
+    is too high to sort. Once all the segments are labeled, the annotations could be saved and exported as json file.
     \begin{figure}
         \centering
         \includegraphics[width=0.9\linewidth]{example_images/NiceGUIInterface.png}
         \caption{Annotation tool}
         \label{Annotation tool}
     \end{figure}
+\subsection{Dataset Expansion}
+    Last subsection shows the approach of generating the dataset of the wire harness by using stereo vision camera and the annotation tool. Although this is an accurate approach
+    to generate the dataset, it is time-consuming and inefficient. And the number of images labeled in this way is limited. In this subsection, two developed methods for expanding
+    the datasets are introduced.
+\subsubsection{Synthesized images of BDLOs}
+\subsubsection{Operations on segments}
 \section{Model}
 \section{Experiment}
