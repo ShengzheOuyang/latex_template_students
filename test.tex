@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{algorithm}
+\caption{Calculate the length of a spline}
+\begin{algorithmic}[1]
+\STATE \textbf{Input:} $X$
+\STATE $Length \leftarrow [\quad]$
+\FOR{$(x_{k},y_{k}),(x_{k+1},y_{k+1}) \in X$}
+    \STATE $Distance \leftarrow (x_{k+1}-x_{k})^2+(y_{k+1}-y_{k})^2$
+    \STATE $Length.append(Distance)$
+\ENDFOR
+\RETURN $\text{sum}(Length)$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Calculate the bending energy of a spline}
+\begin{algorithmic}[1]
+\STATE \textbf{Input:} $g$
+\STATE $g\_t \leftarrow g.\text{t}()$
+\STATE $x \leftarrow g\_t[0, :]$
+\STATE $y \leftarrow g\_t[1, :]$
+\STATE $j \leftarrow \text{torch.arange(len}(g), \text{dtype=float)}$
+\STATE $coeffs\_gt \leftarrow \text{natural\_cubic\_spline\_coeffs}(j, g)$
+\STATE $spline\_gt \leftarrow \text{NaturalCubicSpline}(coeffs\_gt)$
+\STATE $interp\_j \leftarrow \text{torch.linspace}(0, j.\text{max}(), self.spline\_num)$
+\STATE $keypts\_spline\_gt \leftarrow \text{torch.stack}([spline\_gt.\text{evaluate}(l) \text{ for } l \text{ in } interp\_j])$
+\STATE $x\_fine \leftarrow keypts\_spline\_gt[:, 0]$
+\STATE $y\_fine \leftarrow keypts\_spline\_gt[:, 1]$
+\STATE $dx\_dt \leftarrow \text{torch.gradient}(x\_fine, \text{spacing}=(interp\_j,))[0]$
+\STATE $dy\_dt \leftarrow \text{torch.gradient}(y\_fine, \text{spacing}=(interp\_j,))[0]$
+\STATE $d2x\_dt2 \leftarrow \text{torch.gradient}(dx\_dt, \text{spacing}=(interp\_j,))[0]$
+\STATE $d2y\_dt2 \leftarrow \text{torch.gradient}(dy\_dt, \text{spacing}=(interp\_j,))[0]$
+\STATE $numerator \leftarrow \text{torch.abs}(dx\_dt \cdot d2y\_dt2 - dy\_dt \cdot d2x\_dt2)$
+\STATE $denominator \leftarrow (dx\_dt^2 + dy\_dt^2)^{3/2}$
+\STATE $curvature \leftarrow numerator / denominator$
+\STATE $ds \leftarrow \text{torch.sqrt}(dx\_dt^2 + dy\_dt^2)$
+\STATE $bending\_energy \leftarrow \text{torch.trapz}(curvature^2 \cdot ds, interp\_j)$
+\RETURN $bending\_energy.\text{item}()$
+\end{algorithmic}
+\end{algorithm}
+
+\end{document}
