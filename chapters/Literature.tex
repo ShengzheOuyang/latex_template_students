@@ -189,4 +189,8 @@
     than classification because of the location of the bounding box and the size of the object. The researchers optimize the strategies by: (1) changing the color channels of the image 
     without influence to the position of bounding box. (2) The location of the bounding box changes along with the geometrical transformation. (3) Only the transformation of pixels inside
     the bounding box is operated. A series of experiments proved that the optimized policy significantly improved the accuracy of object detection and also also proved the importance of data 
-    augmentation for object detection.
+    augmentation for object detection. There are some standard policies for dataset augmentation in general, but it also causes problems, such as the policy, which is suitable for one dataset,
+    might not be suitable for another dataset. In \cite{47890}, the team from Google proposed a new strategy that automatically searched the optimal dataset augmentation policy for 
+    the highest validation accuracy in each specific tasks. The researchers defined a search space, which contained one dataset augmentation policy. It contains multiple sub-policies and each 
+    consists of two traditional augmentation operation, e.g, rotating and flipping. By searching for the optimal combination of augmentations in this space, it is able to generate more  diversified 
+    augmented data.

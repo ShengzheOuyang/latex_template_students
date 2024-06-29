@@ -168,4 +168,23 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
   \end{aligned}
   \end{equation}
 \section{Transformer}
+  In this section, the transformer will be introduced in detail. Think about keypoint detection tasks for the wire harness. The background is regarded as 
+  the disturbance. The basic idea is ignoring the non-relevant part and only focusing on the wire harness. 
+  The original model architecture of the transformer is shown in \autoref{The Transformer model architecture}. It consists an encoder and decoder structure. 
+  It was initially employed to process natural language processing (NLP) tasks such as text translation and generation. The input is defined as three parts:
+  query(Q), key(K) and value(V). The query can be viewed as the vector form of a word in text. It could correspond to several keys, which represent vectors of the all words 
+  in a text. The value represents the extracted information vector from the all words. $Attention(Q, K)$ represents the match between the query and the corresponding keys 
+  and is usually calculated in \autoref{eq:Calculate attention}, where $d_k$ is the dimension of the key vector for avoiding a too large numerator.
+  \begin{equation}
+    \begin{aligned}
+      Attention(Q,K)=\frac{Q\cdot K^T}{\sqrt{d_{k}}} 
+        \label{eq:Calculate attention}
+    \end{aligned}
+    \end{equation}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{example_images/transformer}
+    \caption{The Transformer model architecture\cite{NIPS2017_3f5ee243}}
+    \label{The Transformer model architecture}
+  \end{figure}
 \section{Dataset}
