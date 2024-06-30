@@ -170,21 +170,51 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
 \section{Transformer}
   In this section, the transformer will be introduced in detail. Think about keypoint detection tasks for the wire harness. The background is regarded as 
   the disturbance. The basic idea is ignoring the non-relevant part and only focusing on the wire harness. 
-  The original model architecture of the transformer is shown in \autoref{The Transformer model architecture}. It consists an encoder and decoder structure. 
-  It was initially employed to process natural language processing (NLP) tasks such as text translation and generation. The input is defined as three parts:
+  The original model architecture of the transformer is shown in \autoref{The Transformer model architecture}. It consists of an encoder and decoder structure. 
+  It was initially employed to process natural language processing (NLP) tasks such as text translation and generation. 
+\subsection{Attention}
+  The input is defined as three parts:
   query(Q), key(K) and value(V). The query can be viewed as the vector form of a word in text. It could correspond to several keys, which represent vectors of the all words 
-  in a text. The value represents the extracted information vector from the all words. $Attention(Q, K)$ represents the match between the query and the corresponding keys 
-  and is usually calculated in \autoref{eq:Calculate attention}, where $d_k$ is the dimension of the key vector for avoiding a too large numerator.
+  in a text. The value represents the extracted information vector from the all words. $Attention(Q, K, v)$ represents the match between each word
+  is usually calculated in \autoref{eq:Calculate attention}, where $d_k$ is the dimension of the key vector for avoiding a too large numerator. 
   \begin{equation}
     \begin{aligned}
-      Attention(Q,K)=\frac{Q\cdot K^T}{\sqrt{d_{k}}} 
+      Attention(Q,K)=softmax(\frac{Q\cdot K^T}{\sqrt{d_{k}}}) \cdot V 
         \label{eq:Calculate attention}
     \end{aligned}
-    \end{equation}
+  \end{equation}
+  For example, the score between the words in the sentence "I am a student" are shown in \autoref{Attentions in a sentence}. The four words on a column represent Q, and they each have 4 
+  keys. The values in the table grid represent the matches between words. The highest values appear between identical words. The less related the words are to each other, the lower the 
+  value. After getting the values between words, it passes through a softmax function, which transforms the values into probabilities between zero and one. Then calculate the dot product
+  between the probabilities matrix and the vector V to get the output representation of each word. For easier understanding, the calculation can be expressed as \autoref{Calculate the attentions}.
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{example_images/IamAStudent}
+    \caption{Match between words}
+    \label{Attentions in a sentence}
+  \end{figure}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{example_images/AttenCalculation}
+    \caption{Calculate the attentions}
+    \label{Calculate the attentions}
+  \end{figure}
   \begin{figure}
     \centering
     \includegraphics[width=0.6\linewidth]{example_images/transformer}
     \caption{The Transformer model architecture\cite{NIPS2017_3f5ee243}}
     \label{The Transformer model architecture}
   \end{figure}
+\subsection{Position Embedding}
+  Transformer is unable to understand the sequential relations of  words in the input. So, it is necessary for the model to understand the position of the elements in the sequence.
+  The researchers proposed the Position Embedding approach to realize it, which is presented in \autoref{eq:Position Embedding}, where $pos$ is the position of the word in a sentence,
+  $d_{model}$ is the dimension of this word vector and $i$ is the indices in the dimension.   
+  \begin{equation}
+    \begin{aligned}
+      PE(pos,i) &= sin(\frac{pos}{10000^{2i/d_{model}}})\\
+      PE(pos,i+1) &= cos(\frac{pos}{10000^{2i/d_{model}}})
+        \label{eq:Position Embedding}
+    \end{aligned}
+  \end{equation}
+
 \section{Dataset}
