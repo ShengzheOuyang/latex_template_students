@@ -170,10 +170,11 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
 \section{Transformer}
   In this section, the transformer will be introduced in detail. Think about keypoint detection tasks for the wire harness. The background is regarded as 
   the disturbance. The basic idea is ignoring the non-relevant part and only focusing on the wire harness. 
-  The original model architecture of the transformer is shown in \autoref{The Transformer model architecture}. It consists of an encoder and decoder structure. 
+  The original model architecture of the transformer is shown in \autoref{The Transformer model architecture}, which is firstly proposed by Vaswani in 2017 \cite{NIPS2017_3f5ee243}. 
+  It consists of an encoder and decoder structure. 
   It was initially employed to process natural language processing (NLP) tasks such as text translation and generation. 
 \subsection{Attention}
-  The input is defined as three parts:
+  The input to encoder composes of three parts:
   query(Q), key(K) and value(V). The query can be viewed as the vector form of a word in text. It could correspond to several keys, which represent vectors of the all words 
   in a text. The value represents the extracted information vector from the all words. $Attention(Q, K, v)$ represents the match between each word
   is usually calculated in \autoref{eq:Calculate attention}, where $d_k$ is the dimension of the key vector for avoiding a too large numerator. 
@@ -208,7 +209,8 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
 \subsection{Position Embedding}
   Transformer is unable to understand the sequential relations of  words in the input. So, it is necessary for the model to understand the position of the elements in the sequence.
   The researchers proposed the Position Embedding approach to realize it, which is presented in \autoref{eq:Position Embedding}, where $pos$ is the position of the word in a sentence,
-  $d_{model}$ is the dimension of this word vector and $i$ is the indices in the dimension.   
+  $d_{model}$ is the dimension of this word vector and $i$ is the indices in the dimension.  After the Position Embedding is obtained, the word vectors are added with it, which are unique
+  according to their position information.
   \begin{equation}
     \begin{aligned}
       PE(pos,i) &= sin(\frac{pos}{10000^{2i/d_{model}}})\\
@@ -216,5 +218,32 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
         \label{eq:Position Embedding}
     \end{aligned}
   \end{equation}
-
+\subsection{Mask in decoder}
+  The output of encoder will flow into decoder. The purpose of the decoder is to make the model consider the previously generated results when it generates the target sequence.
+  The structure of decoder is similar to the encoder. There are two main blocks in decoder. The first block calculates the attention of the generated output and the second 
+  block calculates the attention of the encoder's output with the output of the first block in decoder. While in encoder the attentions of the query with each of its keys will be
+  calculated and considered, each word of the target sequence should only consider the word before it. The mask, which will be introduced in this subsection, is included to avoid 
+  the information leakage. It is actually an upper triangular matrix, as shown in \autoref{Mask in decoder}. It is added with the score matrix of output and the results is shown
+  in \autoref{The score matrix added with mask}. Due to the infinite negative score in the added matrix, after the softmax function the possibilities will be zero. In this case,
+  the output words are independent on the future words.
+  \begin{figure}[htbp]
+		\centering
+		\begin{subfigure}[b]{0.5\textwidth}
+			\centering
+			\includegraphics[width=0.9\linewidth]{example_images/mask}
+			\caption{Mask in decoder}
+			\label{Mask in decoder}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}[b]{0.5\textwidth}
+			\centering
+			\includegraphics[width=0.9\linewidth]{example_images/mask1}
+			\caption{The score matrix added with mask}
+			\label{The score matrix added with mask}
+		\end{subfigure}
+		\caption{Use mask to prevent the influence from future words}
+		\label{Use mask to prevent the influence from future words}
+	\end{figure}
+\subsection{Vision Transformer}
+  With the success of Transformer in the field of NLP, researchers began to explore its application in computer vision
 \section{Dataset}
