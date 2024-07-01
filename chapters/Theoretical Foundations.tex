@@ -134,6 +134,71 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
     \caption{Trade-off between batch size}
     \label{Trade-off between batch size}
   \end{figure}
+  \subsection{Performance metrics}
+  Metrics in deep learning are used to measure the performance of a model. Different tasks require different metrics for evaluating. In this subsection, the commonly used metrics 
+  will be presented depending on the different specific task.
+  \subsubsection{Classification}
+  Two states $H_1$ and $H_2$ are going to be classified, $H_1$ represents the positive state and  $H_2$ represents the negative state. The predicted state is defined as $\hat{H}$.
+  Then there are four basic metrics to evaluate the model performance, which are True Positive(TP), False Positive(FP), False Positive(FP) and False Negative(FN).
+  The cases they correspond to are shown in \autoref{Four basic metrics for classification}.
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{example_images/basicMetrics}
+    \caption{Four basic metrics for classification}
+    \label{Four basic metrics for classification}
+  \end{figure}
+  Then three metrics that are widely used in classification tasks can be derived: \textbf{Accuracy} in \autoref{eq:Accuracy} means the percentage of correctly classified data
+  out of the total number of data. \textbf{Precision} in \autoref{eq:Precision} means the percentage of positive data out of the all data predicted to be positive. 
+  \textbf{Recall} in \autoref{eq:Recall} means the percentage of correctly predicted positive data out of the all actual positive data.
+  \begin{equation}
+    \begin{aligned}
+      Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+        \label{eq:Accuracy}
+    \end{aligned}
+  \end{equation}
+  \begin{equation}
+    \begin{aligned}
+      Precision = \frac{TP}{TP + FP}
+        \label{eq:Precision}
+    \end{aligned}
+  \end{equation}
+  \begin{equation}
+    \begin{aligned}
+      Recall = \frac{TP}{TP + FN}
+        \label{eq:Recall}
+    \end{aligned}
+  \end{equation}
+\subsubsection{Regression}
+The Metrics for regression tasks are similar to its loss functions. For example, Mean Squared Error(MSE) in \autoref{eq:MSEmetrics} and Mean Absolute Error(MAE)
+in \autoref{eq:MAEmetrics} could either be used as the loss function as the metrics for evaluation. 
+\begin{equation}
+  \begin{aligned}
+    MSE = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i)^2
+      \label{eq:MSEmetrics}
+  \end{aligned}
+\end{equation}
+\begin{equation}
+  \begin{aligned}
+    MAE = \frac{1}{n} \sum_{i=1}^n |\hat{y}_i - y_i|
+      \label{eq:MAEmetrics}
+  \end{aligned}
+\end{equation}
+\subsubsection{Keypoint detection}
+Object Keypoint Similarity (OKS) is a metric used to evaluate the accuracy of keypoint detection. In \cite{Maji_2022_CVPR}, the author introduced it as \autoref{eq:OKS},
+which is for each keypoint individually.
+\begin{equation}
+  \begin{aligned}
+    OKS = \frac{\sum_{i=1}^{K} \exp \left( -\frac{d_i^2}{2s^2k_i^2} \right) \cdot \delta(v_i > 0)}{\sum_{i=1}^{K} \delta(v_i > 0)}
+      \label{eq:OKS}
+  \end{aligned}
+\end{equation}
+Where:
+\begin{itemize}
+    \item \( d_i \) is the Euclidean distance between the predicted keypoint and the ground truth keypoint.
+    \item \( s \) is scale of the object, e.g., the size of the bounding box.
+    \item \( k_i \) is the keypoint specific weight.
+    \item \( v_i \) is the visibility flag, e.g., 0 for not labeled and not visible keypoints, 1 for labeled but not visible keypoints, 2 for labeled and visible keypoints.
+\end{itemize}
 \section{Convolutional neural network}
   DNN can extract very deep features by connecting multiple layers. But Yann LeCun in \cite{LeCun1995-LECCNF} also pointed out some drawbacks:
   \begin{itemize}
@@ -246,4 +311,6 @@ In this chapter, the theoretical Foundations of deep learning model will be intr
 	\end{figure}
 \subsection{Vision Transformer}
   With the success of Transformer in the field of NLP, researchers began to explore its application in computer vision
+\section{Full and individual segment estimation}
+
 \section{Dataset}
