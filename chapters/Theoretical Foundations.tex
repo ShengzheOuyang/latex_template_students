@@ -312,5 +312,31 @@ Where:
 \subsection{Vision Transformer}
   With the success of Transformer in the field of NLP, researchers began to explore its application in computer vision
 \section{Full and individual segment estimation}
-
+\section{Object detection}
+  Object detection is a computer vision task that aims to recognize and localize objects in the image. Object detection are mainly divided into two classes: 
+  One Stage(Yolo family) and Two Stage detectors(RCNN family). These two types of detectors can be further divided into Anchor Based and Anchor Free methods. 
+  The basic theories of these methods are described in this section.
+\subsection{Two stage detection}
+  Take the well-known Faster RCNN method as an example of a typical two-stage target detection\cite{NIPS2015_14bfa6bb}. It is composed of two modules: the 
+  first module is a Region Proposal Network, which proposes the region includes the object. The second module is actually a Fast RCNN detector, which employes
+  the proposals to classify objects. The architecture is shown in \autoref{Two stage object detection}. The convolutional layers extract the features of the 
+  input image to generate a feature map. A small network will slide the whole feature map and its input is the $n \times n$ spatial window of the extracted feature map.
+  In The sliding window is processed twice separately: The first process is to predict the possibility for classification and the second is to bound the object for localization. 
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{example_images/two_stage_detection}
+    \caption{Two stage object detection\cite{NIPS2015_14bfa6bb}}
+    \label{Two stage object detection}
+  \end{figure}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{example_images/Region Proposal}
+    \caption{How the sliding window works}
+    \label{How the sliding window works}
+  \end{figure}
+\subsubsection{Region Proposal Generation}
+\subsubsection{Classification and Regression}
+\subsection{One stage detection}
+\subsection{Anchor based detection}
+\subsection{Anchor free detection}
 \section{Dataset}
