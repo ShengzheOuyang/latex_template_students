@@ -259,13 +259,13 @@ Where:
     \caption{Match between words}
     \label{Attentions in a sentence}
   \end{figure}
-  \begin{figure}
+  \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.6\linewidth]{example_images/AttenCalculation}
     \caption{Calculate the attentions}
     \label{Calculate the attentions}
   \end{figure}
-  \begin{figure}
+  \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.6\linewidth]{example_images/transformer}
     \caption{The Transformer model architecture\cite{NIPS2017_3f5ee243}}
@@ -311,32 +311,72 @@ Where:
 	\end{figure}
 \subsection{Vision Transformer}
   With the success of Transformer in the field of NLP, researchers began to explore its application in computer vision
-\section{Full and individual segment estimation}
+\section{Full-topology and individual-segment detection}
+ The topology of a eleven-segment wire harness is shown in \autoref{fig:Topology of the eleven-segment wire harness}. It could be either detected as a single
+ object, or divided into individual segments and each of them is regarded as an individual segment to be detected. If it is detected as a single object, 
+ the dataset should be annotated in a fixed order of segments if there is no algorithm of segments sorting, e.g., from $s_1$ to $s_10$. 
+ We define two sets $S$ and $\hat{S}$ of dimension $S \times K \times H \times W$, which contain the predicted- and ground-truth segments of the wire harness. 
+ Each segment of dimension $K\times H\times W$ contains all the keypoints on it. After the model makes a prediction, the predicted tensor and ground truth may 
+ not match due to the problem that some images of wire harness is not labeled according to the topology. This could lead to the failure of training if we do not 
+ sort the order of the segments. Hence we adjust the order through Algorithm \ref{Segments Sorting} before the model calculates the loss at each forward propagation. 
+ The segments in $\hat{S}$ will be computed against all possible matches in $S$ to obtain the minimum binary cross-entropy loss. Once the minimum loss is determined, 
+ its corresponding segment is excluded from $S$ and stored to $S\star$. The next round of matching begins until the best match is found for all segments in $\hat{S}$. 
+ $S^{star}$ is the new set obtained by sorting the prediction set $S$ and matched with the ground-truth set $\hat{S}$.
+ \begin{algorithm} 
+  \caption{Segments Sorting}
+  \label{Segments Sorting}
+  \begin{algorithmic}
+  \STATE \textbf{Input:} $S, \hat{S}$
+  \STATE \textbf{Output:} $S^{\star}$
+  \STATE $ L\leftarrow \left [\ \right ] $
+  \STATE $ S^{\star}\leftarrow \left [\ \right ] $
+  \FOR{$\hat{B} \in \hat{S}$}
+      \FOR{$B \in S$}
+          \STATE $L.append(GetBinaryCrossEntropyLoss(\hat{B},B))$
+      \ENDFOR
+      \STATE $S^{\star}.append({argmin(L)})$
+      \STATE $S.pop({argmin(L)})$
+  \ENDFOR
+  \RETURN $S^{\star}$
+  \end{algorithmic}
+\end{algorithm}
+
+ \begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.5\linewidth]{example_figures/Topology.pdf}
+  \caption{Validation}
+  \label{fig:Topology of the eleven-segment wire harness}
+\end{figure}
 \section{Object detection}
   Object detection is a computer vision task that aims to recognize and localize objects in the image. Object detection are mainly divided into two classes: 
-  One Stage(Yolo family) and Two Stage detectors(RCNN family). These two types of detectors can be further divided into Anchor Based and Anchor Free methods. 
-  The basic theories of these methods are described in this section.
-\subsection{Two stage detection}
+  One Stage(YOLO family) and Two Stage detectors(RCNN family). These two types of detectors can be further divided into Anchor Based and Anchor Free methods. 
+  The basic theories of these methods are described in this section.\\
   Take the well-known Faster RCNN method as an example of a typical two-stage target detection\cite{NIPS2015_14bfa6bb}. It is composed of two modules: the 
   first module is a Region Proposal Network, which proposes the region includes the object. The second module is actually a Fast RCNN detector, which employes
   the proposals to classify objects. The architecture is shown in \autoref{Two stage object detection}. The convolutional layers extract the features of the 
   input image to generate a feature map. A small network will slide the whole feature map and its input is the $n \times n$ spatial window of the extracted feature map.
-  In The sliding window is processed twice separately: The first process is to predict the possibility for classification and the second is to bound the object for localization. 
-  \begin{figure}
+  The sliding window is processed twice separately: The first process is to predict the possibility for classification and the second is to bound the object for localization.\\
+  \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.6\linewidth]{example_images/two_stage_detection}
     \caption{Two stage object detection\cite{NIPS2015_14bfa6bb}}
     \label{Two stage object detection}
   \end{figure}
-  \begin{figure}
+  \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.9\linewidth]{example_images/Region Proposal}
     \caption{How the sliding window works}
     \label{How the sliding window works}
   \end{figure}
-\subsubsection{Region Proposal Generation}
-\subsubsection{Classification and Regression}
-\subsection{One stage detection}
+  Compared with two-stage detection, which generates proposals firstly and in the next stage for the regression and classification. The one-stage detection method 
+  predicts on the input image directly and train the model end to end. This type of model is represented by YOLO(You Only Look Once), which has a high speed of 
+  prediction and is suitable for real-time detection. The basic idea of the one-stage detection method is shown in \autoref{One-stage object detection}.
+  \begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.9\linewidth]{example_figures/TwoStageDetection}
+    \caption{One stage object detection}
+    \label{One stage object detection}
+  \end{figure}
 \subsection{Anchor based detection}
 \subsection{Anchor free detection}
 \section{Dataset}
