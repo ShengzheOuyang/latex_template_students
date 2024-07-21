@@ -70,17 +70,78 @@ In this chapter, the methodologies and tools for preparing the dataset, designin
     After one branch is labeled, the user could press up key to start labeling the next segment. The number of nodes on each segment should be the same. The sequences of 
     segments could also be adjusted. This is important for the model to learn the structure of the wire harness when the segments are not sorted in the program or the complexity 
     is too high to sort. Once all the segments are labeled, the annotations could be saved and exported as json file.
-    \begin{figure}
+    \begin{figure}{!htbp}
         \centering
         \includegraphics[width=0.9\linewidth]{example_images/NiceGUIInterface.png}
         \caption{Annotation tool}
         \label{Annotation tool}
     \end{figure}
 \subsection{Dataset Expansion}
-    Last subsection shows the approach of generating the dataset of the wire harness by using stereo vision camera and the annotation tool. Although this is an accurate approach
-    to generate the dataset, it is time-consuming and inefficient. And the number of images labeled in this way is limited. In this subsection, two developed methods for expanding
-    the datasets are introduced.
-\subsubsection{Synthesized images of BDLOs}
+    Last subsection shows the approach of generating the dataset of the wire harness by using stereo vision camera and the annotation tool. However, annotating a large  
+    dataset manually is time-consuming and inefficient. A small dataset could lead to the problem of under-fitting and the bad generalization. In this subsection, two 
+    developed methods for expanding the datasets are introduced. 
+\subsubsection{Synthetic images of BDLOs}
+    A synthetic dataset of the eleven-segment wire harnesses is generated for transfer learning, which has the same topology as \autoref{fig:Topology of the eleven-segment wire harness}.
+    To set up the configuration, the topology, the number of keypoints and the length of each segment are defined in advance. The cubic spline is obtained by interpolating randomly generated 
+    control points under certain constraints, e.g. the maximum angle between two neighboring keypoints is set in \autoref{The constraint of maximum angle between two neighboring keypoints}
+    to prevent the interpolating spline from being too curved. 
+    \begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.5\linewidth]{example_figures/MaxAngle_synthetic.pdf}
+        \caption{The constraint of maximum angle between two neighboring keypoints}
+        \label{The constraint of maximum angle between two neighboring keypoints}
+    \end{figure}
+    To make the fake image a better representation of some special situations such as overlapping, the lighting condition is mimic
+    by means of a convolutional kernel to minimize the gap between the real and fake images. From the edges to the center of the segment, the pixel become lighter in color. An example of the 
+    synthetic wire harness is shown in \autoref{An example of the synthetic image of the eleven-segment wire harness}.
+    \begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.4\linewidth]{example_figures/fakeimg.png}
+        \caption{An example of the synthetic image of the eleven-segment wire harness}
+        \label{An example of the synthetic image of the eleven-segment wire harness}
+    \end{figure}
 \subsubsection{Operations on segments}
+    The dataset could be extended by operations on segments, e.g, rotation and translation. To operate on the branches of the harness, the harness 
+    first needs to be segmented. Here the images are firstly segmented to individual segments by using Label-Studio, see \autoref{fig:Wire Segmentation}.\\
+	\begin{figure}[!htbp]
+		\centering
+		\includegraphics[width=0.6\linewidth]{example_images/img_0_segment}
+		\caption{Wire Segmentation}
+		\label{fig:Wire Segmentation}
+	\end{figure}
+	A rotation matrix is defined as \autoref{eq:rotation matrix}:
+	\begin{align}
+		\begin{bmatrix}
+			cos(\theta)&  -sin(\theta )&x \\
+			sin(\theta )&  cos(\theta )&y  \\
+			0&  0&1
+		\end{bmatrix} \label{eq:rotation matrix}
+	\end{align}
+	An all-zeros mask will be created firstly that has the same size as the image of wire harnesses. The values on mask, where corresponds to the coordinate position of
+	annotated points of segmentation, are then equal to one. The corresponding image region $\mho$ of the wire harness will be segmented as a polygonal region based on the mask.
+	Build the rotation matrix relative to the desired position and then calculate its corresponding new coordinates by using \autoref{eq:new region}. 
+	Paste the previously segmented polygonal area onto the empty background. The new generated virtual image is \autoref{fig:fake image}.
+	\begin{align}
+		\mho ^{\star } = \mho \cdot \begin{bmatrix}
+			cos(\theta)&  -sin(\theta )&x \\
+			sin(\theta )&  cos(\theta )&y  \\
+			0&  0&1
+		\end{bmatrix} \label{eq:new region}
+	\end{align}
+
+	\begin{figure}[!htbp]
+		\centering
+		\includegraphics[width=0.6\linewidth]{example_images/img_0_segment_fakeImages}
+		\caption{fake image}
+		\label{fig:fake image}
+	\end{figure}
+	The corresponding annotation $\Theta $ could also be calculated with the rotation matrix as \autoref{eq:new anno}:
+	\begin{align}
+		\Theta ^{\star } = \Theta \cdot \begin{bmatrix}
+			cos(\theta)&  -sin(\theta )&x \\
+			sin(\theta )&  cos(\theta )&y  \\
+			0&  0&1
+		\end{bmatrix} \label{eq:new anno}
+	\end{align}
 \section{Model}
 \section{Experiment}

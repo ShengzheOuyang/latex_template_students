@@ -293,16 +293,16 @@ Where:
   the output words are independent on the future words.
   \begin{figure}[htbp]
 		\centering
-		\begin{subfigure}[b]{0.5\textwidth}
+		\begin{subfigure}{0.45\textwidth}
 			\centering
-			\includegraphics[width=0.9\linewidth]{example_images/mask}
+			\includegraphics[width=0.8\linewidth]{example_images/mask}
 			\caption{Mask in decoder}
 			\label{Mask in decoder}
 		\end{subfigure}
 		\hfill
-		\begin{subfigure}[b]{0.5\textwidth}
+		\begin{subfigure}{0.45\textwidth}
 			\centering
-			\includegraphics[width=0.9\linewidth]{example_images/mask1}
+			\includegraphics[width=0.8\linewidth]{example_images/mask1}
 			\caption{The score matrix added with mask}
 			\label{The score matrix added with mask}
 		\end{subfigure}
@@ -310,7 +310,18 @@ Where:
 		\label{Use mask to prevent the influence from future words}
 	\end{figure}
 \subsection{Vision Transformer}
-  With the success of Transformer in the field of NLP, researchers began to explore its application in computer vision
+  With the success of Transformer in the field of NLP, researchers began to explore its application in computer vision. The input image of size $C\times H\times W$, where 
+  $C$ corresponds to the channel, $H$ corresponds to the height of the image and $W$ corresponds to the width of the figure, is divided into small patches of size$C\times P \times P$.
+  A learnable embedding for classification $x_{class}$ and position embeddings will be added to the patch embeddings and fed to the encoder of the Transformer. After going through
+  multiple layers of Transformer encoder, the output sequence contains global information about the image. $x_class$ is classified by a head, which is implemented by the 
+  Multilayer Perceptron(MLP). The process is shown in \autoref{fig:Vision Transformer}. With different heads, Vision Transformer(ViT) can also be utilized for different tasks 
+  such as object detection, segmentation, keypoints detection.
+  \begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.9\linewidth]{example_figures/VisionTransformer.png}
+    \caption{Vision Transformer \cite{dosovitskiy2021an}}
+    \label{fig:Vision Transformer}
+  \end{figure}
 \section{Full-topology and individual-segment detection}
  The topology of a eleven-segment wire harness is shown in \autoref{fig:Topology of the eleven-segment wire harness}. It could be either detected as a single
  object, or divided into individual segments and each of them is regarded as an individual segment to be detected. If it is detected as a single object, 
@@ -349,9 +360,8 @@ Where:
 \end{figure}
 \section{Object detection}
   Object detection is a computer vision task that aims to recognize and localize objects in the image. Object detection are mainly divided into two classes: 
-  One Stage(YOLO family) and Two Stage detectors(RCNN family). These two types of detectors can be further divided into Anchor Based and Anchor Free methods. 
-  The basic theories of these methods are described in this section.\\
-  Take the well-known Faster RCNN method as an example of a typical two-stage target detection\cite{NIPS2015_14bfa6bb}. It is composed of two modules: the 
+  One Stage(YOLO family) and Two Stage detectors(RCNN family). The basic theories of these methods are described in this section.\\
+  Take the well-known Faster RCNN method as an example of a typical two-stage object detection\cite{NIPS2015_14bfa6bb}. It is composed of two modules: the 
   first module is a Region Proposal Network, which proposes the region includes the object. The second module is actually a Fast RCNN detector, which employes
   the proposals to classify objects. The architecture is shown in \autoref{Two stage object detection}. The convolutional layers extract the features of the 
   input image to generate a feature map. A small network will slide the whole feature map and its input is the $n \times n$ spatial window of the extracted feature map.
@@ -377,6 +387,25 @@ Where:
     \caption{One stage object detection}
     \label{One stage object detection}
   \end{figure}
-\subsection{Anchor based detection}
-\subsection{Anchor free detection}
-\section{Dataset}
+\section{Keypoints detection}
+  Object detection localizes and classifies the target object, while keypoints detection focuses on some specific keypoints on the obeject. There are two common methods
+  in deep learning for keypoints detection: Heatmap-based method and coordinate regression-based method.\\
+  For Heatmap-based method, the model takes the image as input and outputs the heatmaps of size $H\times W$ for each keypoint. The values in the heatmap represent the possibilities,
+  that the keypoint is localized in this position. Some examples of the generated heatmap are shown in \autoref{Examples of the heatmaps}. The lighter the color, the higher the 
+  probability that the keypoint is located. The position could be obtained by finding the highest possibility as \autoref{eq:maximum likelihood}.\\
+  \begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.6\linewidth]{example_images/heatmap_segment}
+    \caption{Examples of the heatmaps}
+    \label{Examples of the heatmaps}
+  \end{figure}
+  The model is trained end-to-end when the keypoints are derived by the coordinate regression-based method. It tasks the image as input and outputs the position of each 
+  keypoint represented by a numerical value in the $x$ and $y$ directions. As it doesn't need the process of generating heatmaps and calculating heatmaps, the training speed is 
+  higher than the heatmap-based method. 
+\section{Transfer Learning}
+  The purpose of transfer learning is to apply knowledge from a model that has been trained on one task to another related task. It's suitable for special tasks where only 
+  small data sets are available. The model is pre-trained with some easily obtainable dataset\cite{weiss-2016-transferLearning}, e.g., COCO\cite{lin-2014-microsoftCOCO},
+  ImageNet\cite{ILSVRC15} and fein-tuned on the task-specific dataset. The pre-training could also be performed on synthetic dataset, which is generated by computer.
+  The synthetic dataset is similar to the real dataset and annotated automatically. The common methods of generating synthetic datasets include CAD-modeling and rendering.
+  
+  
